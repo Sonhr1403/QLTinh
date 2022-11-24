@@ -1,2 +1,6 @@
-package udqlkhtinh.service;public interface IProvinceService {
+package udqlkhtinh.service;
+
+import udqlkhtinh.model.Province;
+
+public interface IProvinceService extends IGeneralService<Province> {
 }

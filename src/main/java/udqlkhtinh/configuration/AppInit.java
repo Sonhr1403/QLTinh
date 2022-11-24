@@ -1,4 +1,4 @@
-package com.example.udqlkh.configuration;
+package udqlkhtinh.configuration;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 

@@ -1,9 +1,5 @@
-package com.example.udqlkh.configuration;
+package udqlkhtinh.configuration;
 
-import com.example.udqlkh.repository.CustomerRepository;
-import com.example.udqlkh.repository.ICustomerRepository;
-import com.example.udqlkh.service.CustomerService;
-import com.example.udqlkh.service.ICustomerService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -11,6 +7,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -24,6 +23,11 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+import udqlkhtinh.formatter.ProvinceFormatter;
+import udqlkhtinh.service.CustomerService;
+import udqlkhtinh.service.ICustomerService;
+import udqlkhtinh.service.IProvinceService;
+import udqlkhtinh.service.ProvinceService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -33,7 +37,9 @@ import java.util.Properties;
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
-@ComponentScan("com.example.udqlkh.controller")
+@EnableJpaRepositories("udqlkhtinh.repository")
+@ComponentScan("udqlkhtinh.controller")
+@EnableSpringDataWebSupport
 public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
 
     private ApplicationContext applicationContext;
@@ -81,7 +87,7 @@ public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan("com.example.udqlkh.model");
+        em.setPackagesToScan("udqlkhtinh.model");
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
@@ -95,7 +101,7 @@ public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/cms");
         dataSource.setUsername("root");
-        dataSource.setPassword("toilaSon14031999");
+        dataSource.setPassword("123456");
         return dataSource;
     }
 
@@ -114,12 +120,17 @@ public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
     }
 
     @Bean
-    public ICustomerRepository customerRepository() {
-        return new CustomerRepository();
+    public ICustomerService customerService() {
+        return new CustomerService();
     }
 
     @Bean
-    public ICustomerService customerService() {
-        return new CustomerService();
+    public IProvinceService provinceService() {
+        return new ProvinceService();
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addFormatter(new ProvinceFormatter(applicationContext.getBean(ProvinceService.class)));
     }
 }

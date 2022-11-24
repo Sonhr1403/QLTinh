@@ -1,6 +1,15 @@
-package com.example.udqlkh.repository;
+package udqlkhtinh.repository;
 
-import com.example.udqlkh.model.Customer;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
+import udqlkhtinh.model.Customer;
+import udqlkhtinh.model.Province;
 
-public interface ICustomerRepository extends IGeneralRepository<Customer> {
+@Repository
+public interface ICustomerRepository extends PagingAndSortingRepository<Customer, Long> {
+    Iterable<Customer> findAllByProvince(Province province);
+
+    Page<Customer> findAllByFirstNameContaining(String firstname, Pageable pageable);
 }
